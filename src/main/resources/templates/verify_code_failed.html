@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <div th:replace="~{fragments/head :: head}"></div>
+</head>
+
+<body th:attr="data-codeVerified=${codeVerified}">
+<div class="container">
+  <div><h2 id="title" class="row mx-auto"></h2></div>
+  <div class="my-3"><button id="confirm" class="btn btn-primary"></button>
+  </div>
+  </div>
+</body>
+<script>
+    var title = document.getElementById("title");
+    var button = document.getElementById("confirm");
+    button.onclick=function(){
+
+      window.location.href = "/auth/sign_up";
+
+    }
+
+   title.innerText="Your code is incorrect."
+   button.innerHTML="Retry";
+
+
+</script>
+</html>

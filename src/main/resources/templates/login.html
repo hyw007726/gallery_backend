@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <div th:replace="~{fragments/head :: head}"></div>
+</head>
+
+<body>
+<div class="container">
+    <h2 id="title" class="row mx-auto">Login</h2>
+    <form method="post" action="/auth/login_submit">
+        <div class="form-group">
+            <label for="email" required>Email:</label>
+            <input class="form-control" type="email" id="email" name="email" required>
+        </div>
+        <div id="password-container" class="form-group">
+            <label for="password">Password:</label>
+            <input class="form-control" type="password" id="password" name="password" pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$" required>
+        </div>
+        <div class="row my-1"> <a href="/auth/forgot_password" class="link-primary">Forgot Password?</a></div>
+        <div class="my-3"><button id="submit" type="submit" class="btn btn-primary">Login</button>
+<!--            <span th:if="${errorMessage}">-->
+<!--                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">-->
+<!--                    <circle cx="12" cy="12" r="11" fill="#2ecc71" />-->
+<!--                    <path d="M17.3 6.3l-7.8 7.8-3.5-3.5-1.4 1.4 4.9 4.9 9.2-9.2z" fill="#fff" />-->
+<!--                </svg>-->
+<!--                Login successfully-->
+<!--            </span>-->
+            <span  th:if="${status=='NO_SUCH_USER'}"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+  <circle cx="12" cy="12" r="11" fill="#E53E3E"/>
+  <path fill="#fff" d="M13.414 12l4.293-4.293a1 1 0 1 0-1.414-1.414L12 10.586 7.707 6.293a1 1 0 1 0-1.414 1.414L10.586 12l-4.293 4.293a1 1 0 1 0 1.414 1.414L12 13.414l4.293 4.293a1 1 0 1 0 1.414-1.414L13.414 12z"/>
+</svg>User doesn't exist
+</span>
+            <span  th:if="${status=='WRONG_PASSWORD'}"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+  <circle cx="12" cy="12" r="11" fill="#E53E3E"/>
+  <path fill="#fff" d="M13.414 12l4.293-4.293a1 1 0 1 0-1.414-1.414L12 10.586 7.707 6.293a1 1 0 1 0-1.414 1.414L10.586 12l-4.293 4.293a1 1 0 1 0 1.414 1.414L12 13.414l4.293 4.293a1 1 0 1 0 1.414-1.414L13.414 12z"/>
+</svg>Password is wrong
+</span>
+        </div>
+        <div> <span id="question">Don't have an account?</span> <a id="primary_link" href="/auth/sign_up" class="link-primary">Sign up</a></div>
+    </form>
+</div>
+
+</body>
+<script>
+
+    var emailField = document.getElementById("email");
+    var passwordField = document.getElementById("password");
+    passwordField.addEventListener("invalid", ({ target }) => {
+  target.setCustomValidity("Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, and one number");
+});
+passwordField.addEventListener("input", ({ target }) => {
+  target.setCustomValidity("");
+});
+  var result = document.getElementById("resultPrompt")
+  if(result){
+    setTimeout(()=>{
+  result.style.display = "none";
+  },3000)
+  }
+
+</script>
+</html>

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <div th:replace="~{fragments/head :: head}"></div>
+</head>
+
+<body>
+<div class="container">
+  <div><h2 id="title" class="row mx-auto">Welcome back!</h2></div>
+  </div>
+</div>
+</body>
+<script>
+
+window.parent.postMessage(
+ document.cookie, '*'
+)
+</script>
+</html>

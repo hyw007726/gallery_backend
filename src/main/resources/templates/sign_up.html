@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <div th:replace="~{fragments/head :: head}"></div>
+</head>
+<body>
+<div class="container">
+  <h2 id="title" class="row mx-auto">Sign up</h2>
+  <form method="post" action="/auth/send_email_code" onsubmit="return handleOnSubmit()">
+    <div class="form-group">
+      <label for="email" required>Email:</label>
+      <input class="form-control" type="email" id="email" name="email" required>
+    </div>
+    <div class="my-3"><button id="submit" type="submit" class="btn btn-primary">Send code</button>
+    </div>
+  </form>
+
+
+  <form method="get" action="/auth/verify_code" onsubmit="return verifyCode()">
+    <div class="form-group">
+      <label for="code" required>Code:</label>
+      <input class="form-control" type="number" id="code" name="code" required>
+    </div>
+    <div class="my-3"><button id="verify" type="submit" class="btn btn-primary">Verify</button>
+    </div>
+  </form>
+
+  <div> <span id="question">Already have an account?</span> <a id="primary_link" href="/auth/login" class="link-primary">Log in</a></div>
+
+  <iframe id="response-frame" name="response-frame" style="display: none;"></iframe>
+
+  <script th:inline="javascript">
+              var email = document.getElementById("email");
+              var verify = document.getElementById("verify");
+                verify.setAttribute('disabled',true);
+               var code = document.getElementById("code");
+                code.setAttribute('disabled',true);
+                var submitButton = document.getElementById("submit");
+                 submitButton.setAttribute('disabled',true);
+                 if([[${status}]]=="SUCCESS"){
+                 submitButton.innerHTML="Sent";
+                 code.removeAttribute('disabled');
+                 code.focus();
+                 email.value=[[${email}]];
+                 }else if([[${status}]]=="EXIST"){
+                 alert("User already registered!")
+                 }
+
+
+function handleOnSubmit(){
+var submitButton = document.getElementById("submit");
+submitButton.setAttribute('disabled',true);
+submitButton.innerHTML="Checking...";
+return true;
+}
+function verifyCode(){
+var verify = document.getElementById("verify");
+verify.setAttribute('disabled',true);
+verify.innerHTML="Verifying...";
+return true;
+}
+   email.oninput= function(){
+   var submitButton = document.getElementById("submit");
+    submitButton.removeAttribute('disabled');
+    submitButton.innerHTML="Send";
+    }
+       code.oninput= function(){
+   var verify = document.getElementById("verify");
+    verify.removeAttribute('disabled');
+    verify.innerHTML="Verify";
+    }
+
+    </script>
+</div>
+</body>
+<script>
+
+</script>
+</html>
