@@ -108,6 +108,7 @@ public class LoginController {
     @PostMapping("/send_email_code")
     public String send_email_code(Model model, @Email @RequestParam String email) {
         //check user email doesn't exist
+        System.out.println("Received request to send email code");
         if(userService.findByEmail(email)!=null) {
             model.addAttribute("status", "EXIST");
         }else{

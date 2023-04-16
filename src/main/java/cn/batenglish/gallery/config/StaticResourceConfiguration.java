@@ -18,13 +18,12 @@ public class StaticResourceConfiguration implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/uploads/**")
-                .addResourceLocations(uploadDir);
-        registry.addResourceHandler("/__next/image/**")
-                .addResourceLocations(uploadDir) // or wherever the images are stored
-                .setCacheControl(CacheControl.maxAge(1, TimeUnit.HOURS));
+                .addResourceLocations("file:"+uploadDir);
         registry.addResourceHandler("/**")
                 .addResourceLocations("classpath:/static/build/")
                 .setCacheControl(CacheControl.maxAge(1, TimeUnit.HOURS));
+//        registry.addResourceHandler("/uploads/**")
+//                .addResourceLocations("file:/Users/hanyawei/Desktop/gallery/uploads/");
     }
 }
 

@@ -13,6 +13,7 @@ import jakarta.servlet.http.Part;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -21,11 +22,18 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
+import java.net.URLDecoder;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.sql.Timestamp;
 import java.util.*;
 
@@ -69,6 +77,47 @@ public class ImageController {
         return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    }
+    @Value("${upload.dir}")
+    private String uploadDir;
+    @PostMapping("/uploadGenerated")
+    @ResponseBody
+    public String uploadGenerated(@RequestBody Map<String, String> requestBody){
+        String id = requestBody.get("id");
+        String prompt = requestBody.get("prompt");
+        String generated = requestBody.get("generated");
+
+        Optional<User> opUser = userService.findById(Integer.parseInt(id));
+        if(opUser.isPresent()) {
+            User currentUser = opUser.get();
+        try {
+            URL url = new URL(generated);
+            BufferedInputStream in = new BufferedInputStream(url.openStream());
+            String filename=UUID.randomUUID().toString()+ ".png";
+            String filePath = uploadDir + filename ;
+            System.out.println(filePath);
+            File file = new File(filePath);
+            FileOutputStream out = new FileOutputStream(file);
+            byte[] buffer = new byte[1024];
+            int bytesRead = 0;
+            while ((bytesRead = in.read(buffer, 0, 1024)) != -1) {
+                out.write(buffer, 0, bytesRead);
+            }
+            out.close();
+            in.close();
+            Image currentImage = imageService.getNewImage();
+            currentImage.setFilename(filename);
+            currentImage.setCaption(prompt);
+            currentImage.setUploader(currentUser);
+            imageService.saveImage(currentImage);
+            return "Image downloaded successfully!";
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "Failed to download image";
+        }
+        }else{
+            return "User not found";
+        }
     }
     @PostMapping(value = "/uploadImages", consumes = {"multipart/form-data"})
     public ResponseEntity<String> uploadImages(@RequestPart("captions") String captions, HttpServletRequest request, @NotBlank @RequestHeader("Authorization") String id, @RequestParam("images") List<MultipartFile> files) throws IOException, URISyntaxException {

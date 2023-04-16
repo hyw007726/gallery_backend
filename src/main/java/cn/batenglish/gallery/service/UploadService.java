@@ -24,8 +24,9 @@ public class UploadService {
         String fileName = file.getOriginalFilename();
                 String extension = fileName.substring(fileName.lastIndexOf("."));
         String newFilename = UUID.randomUUID().toString() + extension;
-
-        Files.write(Paths.get(new URI(uploadDir + newFilename)), file.getBytes(), StandardOpenOption.CREATE_NEW);
+        System.out.println(uploadDir + newFilename);
+        Path path = Paths.get(uploadDir, newFilename);
+        Files.write(path, file.getBytes(), StandardOpenOption.CREATE_NEW);
         return newFilename;
     }
 }
