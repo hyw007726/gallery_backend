@@ -119,15 +119,19 @@ public class LoginController {
             String content = "Your code is "+code;
             emailService.sendEmail(email,"Gallery sign up code",content);
             model.addAttribute("status", "SUCCESS");
+            System.out.println("Sent email code");
         }
         model.addAttribute("email", email);
         return "sign_up";
     }
     @GetMapping("/verify_code")
     public String verify_code( @RequestParam String code, Model model) {
-
-        if(sessionService.getCode().equals(code)){
+        System.out.println("Received code to be verified: "+code);
+        String sessionCode= sessionService.getCode();
+        System.out.println("Code in session is: "+sessionCode);
+        if(sessionCode.equals(code)){
             model.addAttribute("email", sessionService.getEmail());
+            System.out.println("Redirect to set password page");
             return "set_password";
         }
         return "verify_code_failed";

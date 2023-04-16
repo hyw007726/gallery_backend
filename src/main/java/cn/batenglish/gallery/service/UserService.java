@@ -26,9 +26,6 @@ public class UserService {
         try {
             user.setPassword(encryptionService.encrypt(user.getPassword()));
           User savedUser=userRepository.save(user);
-          if(savedUser==null){
-             return null;
-          }
             return savedUser;
         }catch (Exception ex) {
           System.out.println(ex);

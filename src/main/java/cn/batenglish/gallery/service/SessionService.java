@@ -17,7 +17,9 @@ public class SessionService {
         session.setAttribute("code",code);
     }
     public String getCode(){
-        return session.getAttribute("code").toString();
+        Object code = session.getAttribute("code");
+        return code != null ? code.toString() : "Invalid";
+//        return session.getAttribute("code").toString();
     }
     public void setEmail(String email){
         session.setAttribute("email",email);
